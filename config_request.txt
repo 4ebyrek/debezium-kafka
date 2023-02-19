@@ -1,0 +1,22 @@
+curl --location --request POST 'http://localhost:9090/connectors' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "name": "almaty-1-event-connector",  
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",  
+    "database.hostname": "postgres_deb",  
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "postgres",
+    "database.dbname": "person_db",
+    "database.server.name": "dbserver1", 
+    "table.include.list": "public.outbox",
+    "topic.prefix": "person_event",
+    "include.schema.changes":"false",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.add.headers": "db,op,table",
+    "tombstones.on.delete": "false"
+  }
+}'

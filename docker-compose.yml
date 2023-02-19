@@ -1,0 +1,22 @@
+version: "3"
+services:
+  postgres-connector:
+    image: debezium/connect:2.1.2.Final
+    platform: linux/arm64
+    container_name: postgres-debezium
+    ports:
+      - 9090:8083
+    networks:
+      - kafka-broker_kafka_network
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=almaty
+      - CONFIG_STORAGE_TOPIC=pg_connect_configs
+      - OFFSET_STORAGE_TOPIC=pg_connect_offsets
+      - STATUS_STORAGE_TOPIC=pg_connect_statuses
+      - KEY_CONVERTER=org.apache.kafka.connect.storage.StringConverter
+      - VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
+      - CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE=false
+networks:
+  kafka-broker_kafka_network:
+    external: true
